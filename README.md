@@ -1,3 +1,4 @@
+![ProjectBanner][banner]
 # Waitress
 
 A templated C++ resource manager library for every need
@@ -46,3 +47,5 @@ Read [LICENSE](LICENSE.md)
 
 Copyright (C) 2015 Agorgianitis Loukas <agorglouk@gmail.com>  
 All rights reserved.
+
+[banner]: doc/assets/Logo.png
