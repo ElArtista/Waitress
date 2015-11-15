@@ -54,6 +54,9 @@ namespace Waitress
             if (!ifs.good())
                 return Buffer();
 
+            // Stop the istream_iterator from eating newlines
+            ifs.unsetf(std::ios::skipws);
+
             // Calculate total filesize
             std::streampos sz;
             ifs.seekg(0, std::ios::end);
