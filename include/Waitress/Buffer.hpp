@@ -28,11 +28,13 @@
 /*   ' ') '( (/                                                                                                      */
 /*     '   '  `                                                                                                      */
 /*********************************************************************************************************************/
-#ifndef _WAITRESS_HPP_
-#define _WAITRESS_HPP_
+#ifndef _BUFFER_HPP_
+#define _BUFFER_HPP_
 
-#include <Waitress/ResMan.hpp>
-#include <Waitress/Resolver.hpp>
-#include <Waitress/Datastore.hpp>
+namespace Waitress
+{
+    using Byte = std::uint8_t;
+    using DefaultBuffer = std::vector<Byte>;
+}
 
-#endif // ! _WAITRESS_HPP_
+#endif // ! _BUFFER_HPP_
