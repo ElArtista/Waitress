@@ -32,7 +32,9 @@
 #define _RESOLVER_HPP_
 
 #include "Detail/ForwardResolver.hpp"
+#ifdef WAITRESS_WITH_JSON_RESOLVER
 #include "Detail/JsonResolver.hpp"
+#endif
 
 namespace Waitress
 {
@@ -56,7 +58,9 @@ namespace Waitress
 
     using DefaultResolver = Detail::ForwardResolver;
     using FwResolver = Detail::ForwardResolver;
+#ifdef WAITRESS_WITH_JSON_RESOLVER
     using JsonResolver = Detail::JsonResolver;
+#endif
 } // ! Waitress
 
 #endif // ! _RESOLVER_HPP_
