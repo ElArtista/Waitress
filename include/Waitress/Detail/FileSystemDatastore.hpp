@@ -28,32 +28,51 @@
 /*   ' ') '( (/                                                                                                      */
 /*     '   '  `                                                                                                      */
 /*********************************************************************************************************************/
-#ifndef _DATASTORE_HPP_
-#define _DATASTORE_HPP_
+#ifndef _FILESYSTEM_DATASTORE_HPP_
+#define _FILESYSTEM_DATASTORE_HPP_
 
-#include "Detail/FileSystemDatastore.hpp"
+#include <iterator>
+#include <fstream>
 
 namespace Waitress
 {
-    /**
-     * Datastore
-     *   Encapsulates the access strategy to a datasource location
-     *
-     * Requirements:
-     *   Given:
-     *     * DS, a Datastore type
-     *     * ds, an object of type DS
-     *     * Buffer, a Buffer type
-     *   Then:
-     *     Expression   | Requirements | Return type
-     *     -----------------------------------------------------------------------
-     *     ds.Get(file) |              | A Buffer object with the contents of file
-     *
-     */
+    namespace Detail
+    {
+        template <typename Buffer>
+        class FileSystemDatastore
+        {
+            public:
+                using BufferType = Buffer;
+                Buffer Get(const std::string& file);
+        };
 
-    // A Datastore that accesses the real filesystem
-    template <typename Buffer>
-    using FileSystemDatastore = Detail::FileSystemDatastore<Buffer>;
+        template <typename Buffer>
+        Buffer FileSystemDatastore<Buffer>::Get(const std::string& file)
+        {
+            // Open file
+            std::ifstream ifs(file, std::ios::binary);
+            if (!ifs.good())
+                return Buffer();
+
+            // Calculate total filesize
+            std::streampos sz;
+            ifs.seekg(0, std::ios::end);
+            sz = ifs.tellg();
+
+            // Rewind file pointer
+            ifs.seekg(0, std::ios::beg);
+
+            // Create buffer with preallocated size
+            Buffer buf(static_cast<std::size_t>(sz));
+
+            // Read the data into the buffer
+            buf.insert(std::begin(buf),
+                       std::istream_iterator<typename Buffer::value_type>(ifs),
+                       std::istream_iterator<typename Buffer::value_type>());
+
+            return std::move(buf);
+        }
+    } // ! Detail
 } // ! Waitress
 
-#endif // ! _DATASTORE_HPP_
+#endif // ! _FILESYSTEM_DATASTORE_HPP_
