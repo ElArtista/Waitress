@@ -28,16 +28,28 @@
 /*   ' ') '( (/                                                                                                      */
 /*     '   '  `                                                                                                      */
 /*********************************************************************************************************************/
-#ifndef _RESMAN_HPP_
-#define _RESMAN_HPP_
-
-#include <cstdint>
-#include <vector>
+#ifndef _DATASTORE_HPP_
+#define _DATASTORE_HPP_
 
 namespace Waitress
 {
-    using Byte = std::uint8_t;
-    using DefaultBuffer = std::vector<Byte>;
+    /**
+     * Datastore
+     *   Encapsulates the access strategy to a datasource location
+     * 
+     * Requirements:
+     *   Given:
+     *     * DS, a Datastore type
+     *     * ds, an object of type DS
+     *   Then:
+     *     Expression        | Requirements                      | Return type
+     *     -------------------------------------------------------------------------------------------------------------
+     *     DS::IteratorType  | Satisfies InputIterator concept   | The iterator type that is used to access the resource
+     *     ds.Get(uri)       | uri is convertible to std::string | An instance of type DS::IteratorType [0]
+     *     
+     *   Notes:
+     *     [0]: The iterator points to the beggining of the stream
+     */
 }
 
-#endif // ! _RESMAN_HPP_
+#endif // ! _DATASTORE_HPP_

@@ -36,6 +36,24 @@
 
 namespace Waitress
 {
+    /**
+     * Resolver
+     *   Converts the given resource identifier to an actual
+     *   resource uri used by the Datastore
+     *
+     * Requirements:
+     *   Given:
+     *     * R, a Resolver type
+     *     * r, an object of type R
+     *   Then:
+     *     Expression    | Requirements                     | Return type
+     *     ------------------------------------------------------------------
+     *     r.Resolve(id) | id is convertible to std::string | std::string [0]
+     *
+     *   Notes:
+     *     [0]: The resolved uri that is unique to each resource identifier
+     */
+
     using DefaultResolver = Detail::ForwardResolver;
     using FwResolver = Detail::ForwardResolver;
     using JsonResolver = Detail::JsonResolver;
