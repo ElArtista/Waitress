@@ -1,0 +1,3 @@
+ProjectName: FileSystemAssets
+ProjectType: Executable
+AdditionalIncludes: ["../../include"]
