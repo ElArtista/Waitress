@@ -35,6 +35,7 @@
 #include <cstdint>
 #include <vector>
 #include <unordered_map>
+#include <memory>
 #include "Buffer.hpp"
 #include "Datastore.hpp"
 #include "Resolver.hpp"
@@ -65,7 +66,7 @@ namespace Waitress
             ResolverType& GetResolver();
 
             // Retrieves the internal datastore object
-            DatastoreType& GetDatastore();
+            Datastore<Buffer>& GetDatastore();
 
         private:
             // Used to translate given Uri's to a filepath for accessing resources in the datastore
@@ -85,13 +86,17 @@ namespace Waitress
         std::string filepath = mResolver.Resolve(uri);
 
         // The buffer that will hold the loaded data
-        Buffer buf;
+        std::unique_ptr<Buffer> buf;
 
         // Get the data from the Datastore
         buf = mDatastore.Get(filepath);
 
+        // Check if load was successful
+        if (!buf)
+            return nullptr;
+
         // Move the buffer onto the buffer holder
-        std::pair<typename decltype(mDataMap)::iterator, bool> p = mDataMap.emplace(std::make_pair(uri, std::move(buf)));
+        std::pair<typename decltype(mDataMap)::iterator, bool> p = mDataMap.emplace(std::make_pair(uri, std::move(*buf)));
 
         // Return ptr to the stored buffer
         return &((*(p.first)).second);
@@ -110,7 +115,10 @@ namespace Waitress
     const Buffer* ResMan<Datastore, Resolver, Buffer>::Get(const std::string& uri)
     {
         auto it = mDataMap.find(uri);
-        return &(*it);
+        if (it == std::end(mDataMap))
+            return nullptr;
+        else
+            return &(*it).second;
     }
 
     template <template<class> class Datastore, typename Resolver, typename Buffer>

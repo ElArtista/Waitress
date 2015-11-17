@@ -33,6 +33,7 @@
 
 #include <iterator>
 #include <fstream>
+#include <memory>
 
 namespace Waitress
 {
@@ -43,16 +44,16 @@ namespace Waitress
         {
             public:
                 using BufferType = Buffer;
-                Buffer Get(const std::string& file);
+                std::unique_ptr<Buffer> Get(const std::string& file);
         };
 
         template <typename Buffer>
-        Buffer FileSystemDatastore<Buffer>::Get(const std::string& file)
+        std::unique_ptr<Buffer> FileSystemDatastore<Buffer>::Get(const std::string& file)
         {
             // Open file
             std::ifstream ifs(file, std::ios::binary);
             if (!ifs.good())
-                return Buffer();
+                return std::unique_ptr<Buffer>(nullptr);
 
             // Stop the istream_iterator from eating newlines
             ifs.unsetf(std::ios::skipws);
@@ -73,7 +74,7 @@ namespace Waitress
                        std::istream_iterator<typename Buffer::value_type>(ifs),
                        std::istream_iterator<typename Buffer::value_type>());
 
-            return std::move(buf);
+            return std::make_unique<Buffer>(std::move(buf));
         }
     } // ! Detail
 } // ! Waitress
