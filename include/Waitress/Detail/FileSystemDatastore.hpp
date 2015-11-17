@@ -70,8 +70,7 @@ namespace Waitress
             Buffer buf(static_cast<std::size_t>(sz));
 
             // Read the data into the buffer
-            buf.insert(std::begin(buf),
-                       std::istream_iterator<typename Buffer::value_type>(ifs),
+            buf.assign(std::istream_iterator<typename Buffer::value_type>(ifs),
                        std::istream_iterator<typename Buffer::value_type>());
 
             return std::make_unique<Buffer>(std::move(buf));
